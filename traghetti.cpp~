@@ -153,9 +153,6 @@ int main(void)
 		ofstream out("output.txt"); 
 		out<<PERNO<<" "<<precedente<<endl;
 		out<<FSTPERN<<" "<<SNDPERN;
-
-		cout<<PERNO<<" "<<precedente<<endl;
-		cout<<FSTPERN<<" "<<SNDPERN;
   return 0;
 }
 
