@@ -70,7 +70,7 @@ int bfs(int st){
 		}
 
  	  }
-	cout << " sono entrato! in " <<  cur <<endl;
+
     if(diametri.size()+1==distatt)
 	  diametri.push_back(cur);
     
@@ -99,7 +99,7 @@ int bfs(int st){
 
   grafo[st].diam = grafo[cur].diam; //diametro del nodo
  //nodo più distante (uno dei tanti con il diametro maggiore)
-  cout<<endl;
+  
   return cur;
 }
 //
@@ -139,35 +139,31 @@ int main(void)
 
         FST = bfs(0);
         SND = bfs(FST);
-		cout<<FST<<" "<<SND<< " estremi del grafo"<<endl;
-        CENTRALE = (diametri.size()-1)/2;
+        CENTRALE = ((diametri.size())/2);
 		PERNO = diametri[CENTRALE];
-		cout << PERNO << " questo è il perno" <<endl;
 
 		contanodi(grafo,FST,PERNO);
-		cout<<precedente<<" questo è il precedente"<<endl;
+		
 
 
 
 		grafo[PERNO].danonvisitare = precedente;
-		grafo[precedente].danonvisitare = PERNO;
+		grafo[precedente].danonvisitare = PERNO; 
 
-		filler=bfs(precedente);
-	int result = bfs(filler);
-		CENTRALE = (diametri.size()-1)/2;
+		filler=bfs(FST);
+		 CENTRALE = ((diametri.size())/2);
 		
 		FSTPERN = diametri[CENTRALE];
 			
 
 		filler=bfs(SND);
-		result = bfs(filler);
-		CENTRALE = (diametri.size()-1)/2;
+		CENTRALE = ((diametri.size())/2);
 		SNDPERN = diametri[CENTRALE];
 
 		ofstream out("output.txt"); 
 		out<<PERNO<<" "<<precedente<<endl;
-		out<<FSTPERN<<" "<<SNDPERN;
-
+	    out<<FSTPERN<<" "<<SNDPERN;
+	
 		cout<<PERNO<<" "<<precedente<<endl;
 		cout<<FSTPERN<<" "<<SNDPERN<<endl;
 
@@ -198,7 +194,7 @@ void contanodi(vector<nodo>& grafo, int s,int e)
 
 						result=globalVal;
 						howmany=1;
-						cout<<s<<endl;
+						
 						precedente=s;
 							
 
