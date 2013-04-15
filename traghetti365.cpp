@@ -7,7 +7,6 @@ struct nodo{
   vector<int> adj;
   int diam;
   int danonvisitare;
-  int seen;
   
 };
 vector<nodo> grafo;
@@ -46,38 +45,20 @@ int bfs(int st){
   for(int i=0;i<N;i++)
     grafo[i].diam=-1;
   grafo[st].diam=0;
- 
   //Coda per la visita
   queue<int> q;
   q.push(st);
   int cur;
   int distatt;
-  bool primogiro = true;
   while(!q.empty()){
     cur=q.front();
     q.pop();
     distatt = grafo[cur].diam;
-    if(distatt==diametri.size())
-	if(primogiro){
-	    diametri.push_back(cur);
-	    primogiro = false;}
-	else
-	  {
-		if(grafo[diametri[distatt-1]].adj.size()==1)
-		{
-			diametri.pop_back();
-			diametri.push_back(cur);
-		}
-
- 	  }
-	cout << " sono entrato! in " <<  cur <<endl;
     if(diametri.size()+1==distatt)
 	  diametri.push_back(cur);
-    
-
     for(int i=0;i<grafo[cur].adj.size();i++){
       int vic=grafo[cur].adj[i];
-      if(grafo[vic].diam==-1 && grafo[cur].danonvisitare!=vic){
+      if(grafo[vic].diam==-1 && grafo[vic].danonvisitare==-1){
         //Se un vicino non é ancora stato visitato, imposto la sua distanza.
         grafo[vic].diam=grafo[cur].diam+1;
         q.push(vic);
@@ -109,6 +90,12 @@ int bfs(int st){
 //
 
 
+int sali(int partenza, int arrivo);
+
+
+
+
+
 
 int main(void)
 {
@@ -126,11 +113,11 @@ int main(void)
   for(int i=0;i<M;i++){
     int f,t;
     in>>f>>t;
+	cout<<f<<t;
     grafo[f].adj.push_back(t);
     grafo[f].danonvisitare = -1;
     grafo[t].adj.push_back(f);
     grafo[t].danonvisitare = -1;
-    grafo[t].seen = false;
   }
   //
   // FINE LETTURA FILE DI INPUT
@@ -139,38 +126,36 @@ int main(void)
 
         FST = bfs(0);
         SND = bfs(FST);
-		cout<<FST<<" "<<SND<< " estremi del grafo"<<endl;
+		cout<<FST<<" "<<SND<<endl;
         CENTRALE = (diametri.size()-1)/2;
 		PERNO = diametri[CENTRALE];
-		cout << PERNO << " questo è il perno" <<endl;
+		cout << PERNO << endl;
 
-		contanodi(grafo,FST,PERNO);
-		cout<<precedente<<" questo è il precedente"<<endl;
+		
+  		//contanodi(grafo,SND,PERNO);
 
-
+		precedente = grafo[PERNO].adj[0];
 
 		grafo[PERNO].danonvisitare = precedente;
 		grafo[precedente].danonvisitare = PERNO;
 
-		filler=bfs(precedente);
-	int result = bfs(filler);
+		filler=bfs(FST);
 		CENTRALE = (diametri.size()-1)/2;
-		
 		FSTPERN = diametri[CENTRALE];
-			
+		cout << FSTPERN << endl;
 
 		filler=bfs(SND);
-		result = bfs(filler);
 		CENTRALE = (diametri.size()-1)/2;
 		SNDPERN = diametri[CENTRALE];
+		cout << SNDPERN << endl;
+
 
 		ofstream out("output.txt"); 
 		out<<PERNO<<" "<<precedente<<endl;
 		out<<FSTPERN<<" "<<SNDPERN;
 
 		cout<<PERNO<<" "<<precedente<<endl;
-		cout<<FSTPERN<<" "<<SNDPERN<<endl;
-
+		cout<<FSTPERN<<" "<<SNDPERN;
   return 0;
 }
 
@@ -187,40 +172,41 @@ void contanodi(vector<nodo>& grafo, int s,int e)
 {
 	vector<int> couldBeLinked;   
 
-    if (s==e){}
-	
-	grafo[s].seen=true;
+    if (s==e){globalVal=0;}
+    if (globalVal<=result)
+    {
 	for (int i=0; i<grafo[s].adj.size();i++)
 		{
 			int nodo= grafo[s].adj[i];
 			if (nodo == e)
 				{
-
+					if (globalVal<result)
+						{
 						result=globalVal;
 						howmany=1;
-						cout<<s<<endl;
-						precedente=s;
-							
-
+						precedente = s;
+						}else if(globalVal==result)
+						{
+						howmany++;
+						}
 				}
 			else
 				{
-					if(grafo[nodo].seen==false)
-					{
 					couldBeLinked.push_back(nodo);
-					}
 				}
 		}
-    	
+
+    
 	    for (int i=0;i<couldBeLinked.size();i++)
 		    {
+		    globalVal++;
 		    contanodi(grafo,couldBeLinked[i],e);
-		
+		    globalVal--;
 		    }
-    
-
-
+    }
 }
+
+
 
 
 
