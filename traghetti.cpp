@@ -32,7 +32,7 @@ int result=500;
 int howmany=0;
 int precedente = 0;
 
-void contanodi(vector<nodo>& grafo, int s,int e);
+int contanodi(vector<nodo>& grafo, int s,int e);
 
 //
 //-----------------------------------------------------------
@@ -88,12 +88,6 @@ int bfs(int st){
 //                           FINE BFS
 //----------------------------------------------------------
 //
-
-
-int sali(int partenza, int arrivo);
-
-
-
 
 
 
@@ -155,7 +149,8 @@ int main(void)
 		out<<FSTPERN<<" "<<SNDPERN;
 
 		cout<<PERNO<<" "<<precedente<<endl;
-		cout<<FSTPERN<<" "<<SNDPERN;
+		cout<<FSTPERN<<" "<<SNDPERN<<endl;
+	    cout<<contanodi(grafo,SND,PERNO);
   return 0;
 }
 
@@ -168,40 +163,34 @@ int main(void)
 
 
 
-void contanodi(vector<nodo>& grafo, int s,int e)
+int contanodi(vector<nodo>& grafo, int s,int e)
 {
 	vector<int> couldBeLinked;   
 
-    if (s==e){globalVal=0;}
-    if (globalVal<=result)
-    {
+    if (s==e){return s;}
+
 	for (int i=0; i<grafo[s].adj.size();i++)
 		{
 			int nodo= grafo[s].adj[i];
 			if (nodo == e)
 				{
-					if (globalVal<result)
-						{
+
 						result=globalVal;
 						howmany=1;
 						precedente = s;
-						}else if(globalVal==result)
-						{
-						howmany++;
-						}
+						return precedente;
+							
+
 				}
 			else
 				{
 					couldBeLinked.push_back(nodo);
 				}
-		}
 
     
 	    for (int i=0;i<couldBeLinked.size();i++)
 		    {
-		    globalVal++;
 		    contanodi(grafo,couldBeLinked[i],e);
-		    globalVal--;
 		    }
     }
 }
