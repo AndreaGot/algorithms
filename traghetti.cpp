@@ -139,11 +139,14 @@ int main(void)
 
         FST = bfs(0);
         SND = bfs(FST);
-        CENTRALE = ((diametri.size())/2);
+        CENTRALE = ((diametri.size()-1)/2);
 		PERNO = diametri[CENTRALE];
 
 		contanodi(grafo,FST,PERNO);
 		
+	cout << FST << " primo estremo" << endl;
+		cout << SND << " secondo estremo"<<endl;
+		cout << PERNO << " perno"<<endl;
 
 
 
@@ -151,21 +154,21 @@ int main(void)
 		grafo[precedente].danonvisitare = PERNO; 
 
 		filler=bfs(FST);
-		 CENTRALE = ((diametri.size())/2);
+		 CENTRALE = ((diametri.size()-1)/2);
 		
 		FSTPERN = diametri[CENTRALE];
 			
 
 		filler=bfs(SND);
-		CENTRALE = ((diametri.size())/2);
+		CENTRALE = ((diametri.size()-1)/2);
 		SNDPERN = diametri[CENTRALE];
 
 		ofstream out("output.txt"); 
 		out<<PERNO<<" "<<precedente<<endl;
 	    out<<FSTPERN<<" "<<SNDPERN;
 	
-		cout<<PERNO<<" "<<precedente<<endl;
-		cout<<FSTPERN<<" "<<SNDPERN<<endl;
+	cout<<PERNO<<" "<<precedente<<endl;
+	cout<<FSTPERN<<" "<<SNDPERN<<endl;
 
   return 0;
 }
