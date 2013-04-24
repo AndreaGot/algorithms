@@ -127,7 +127,7 @@ int main(void)
    		dammipercorso(grafo,FST,SND,contatore);
    		trovato = false;
 		contatore++;
-		/*contanodi(grafo,FST,PERNO);*/
+		
 	// ora ho il percorso dal 
 
 	
@@ -145,7 +145,7 @@ int main(void)
 			CENTRALE = ((percorso.size()-1)/2)+1;
 		}else
 		{
-			CENTRALE = ((percorso.size()-1)/2);
+			CENTRALE = ((percorso.size()-1)/2)-1;
 		}
 	}
 	//
