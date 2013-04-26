@@ -33,7 +33,7 @@ int main()
 		int j = 0;
 		while(j<i)
 		{
-			if(valori[j]<valori[i])
+			if(valori[j]<=valori[i])
 			{
 				if(parz[j]>max)
 				{
