@@ -136,16 +136,22 @@ int main(void)
 	//
 	if (percorso.size()%2==1)
 	{
-		CENTRALE = ((percorso.size()-1)/2);
+		CENTRALE = ((percorso.size()-1)/2); //vedere in che caso è meglio (-1) o 1
 			
 	}else //il percorso è di lunghezza pari
 	{
 		if ((percorso.size()/2)%2 ==0)
 		{
 			CENTRALE = ((percorso.size()-1)/2)+1;
-		}else
+		}else 
 		{
-			CENTRALE = ((percorso.size()-1)/2)-1;
+			if((percorso.size()/2)%3==0)
+			{
+				CENTRALE = ((percorso.size()-1)/2)-1; //vedere in che caso è meglio (-1) o 0
+			}else
+			{
+				CENTRALE = ((percorso.size()-1)/2);
+			}
 		}
 	}
 	//
