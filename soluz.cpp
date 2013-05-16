@@ -31,6 +31,8 @@ int main()
 	{ 
 		store[i] = new char[M];
 		in>>store[i][0];
+		
+		cout<<store[i][0];
 
 		for(int j= 1; j<M;j++)
 		{
@@ -51,7 +53,7 @@ int main()
 
 		if (k>0){
 			valori[i].push_back(k);
-			k = 0;
+			k = 1;
 		}
 
 	
