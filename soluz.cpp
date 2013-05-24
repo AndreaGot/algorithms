@@ -12,11 +12,12 @@ using namespace std;
 int calcolaMax(vector<int> array,int k,int i);
 int zainoguerrieri(int c,int i);
 int calcolaSomma(vector<int> array,int k);
-int morefrequent(vector<int> array);
+
 
 int N,M,T;// N = #serate M = #sbalziumore T =#travestimenti
 int** matr;
 bool primocambio;
+
 
 vector<int> * valori;
 
@@ -28,15 +29,15 @@ int main()
 
 	
 	
-	
-	
 	in>>N>>M>>T;
 	valori = new vector<int>[N];
 	
 	
 	store = new char[M];
-	matr = new int* [(N*7)-1];
-
+	matr = new int* [(N*12)-1];
+	
+	int l = 0;
+	int g = 0;
 	int k = 1;
 	int s = 0;
 
@@ -45,16 +46,30 @@ int main()
 		
 		in>>store[0];
 		
-	//	cout<<store[0];
+		//cout<<store[0];
 
+		for (int l = i*12;l<(i*12)+12;l++){
+			matr[l] = new int[T+1];
+		}
 		
+
+		g = 0;
+	
 		for(int j= 1; j<M;j++)
 		{
 			
 			in>>store[j];
 			
-		//	cout<<store[j];
-		
+			//cout<<store[j];
+
+			g = j-1;
+
+			if (g<=T){
+				for (int l = i*12;l<(i*12)+12;l++){
+				matr[l][g] = -1;
+				//cout<<"matri["<<l<<"]["<<g<<"] = "<<matr[l][g]<<"\n";
+				}
+			}
 			if(store[j-1] == store[j])
 				k++;
 			else{
@@ -63,9 +78,20 @@ int main()
 				s++;
 			}			
 			
+			
 		}
 
-	
+		if(T>M)
+		{
+
+			for (int l = i*12;l<(i*12)+12;l++)
+			{		
+				for(int i = g;i<=T;i++)
+				{
+					matr[l][i] = -1;
+				}
+			}
+		}
 
 		if (k>0){
 			valori[i].push_back(k);
@@ -75,38 +101,43 @@ int main()
 	
 		s = 0;
 		//cout<<" \n";
-
-		/*
+/*
+		
 		for(int e = 0;e<valori[i].size();e++)
 		{
 
 		cout<<" "<<valori[i][e];
 
-		}	*/
+		}	
 		// struttura da rivedere.... Troppo sovradimensionata
 
-		//cout<<"\n";
+		cout<<"\n";
+
+		/*
 		for (int l = i*7;l<(i*7)+7;l++)
 		{
-		matr[l] = new int[T+1];
+		
 		
 			for (int m = 0;m<=T;m++)
 			{
 
 			
-			matr[l][m] = -1;
+			
 			//	cout<<l<<" "<<m<<":"<<matr[l][m]<<"\n";
 			}
 		}
-	
-	
-	}
+	*/
+		
 
-	int j;
+		
+		
+
+	 }	
+
 	//cout<<" fin qui \n" ;
 
 	//--------------------------- error checking
-	/*	
+	/*
 	vector<int> tried;
 	for (int i = 0; i<N;i++)
 		{		
@@ -123,10 +154,13 @@ int main()
 		}
 	cout<<sum;*/
 	//------------------------------end error checking
+
+	int res =0;
+
+	res=zainoguerrieri(T,0);
 	
-	int res=zainoguerrieri(T,0);
-	
-	cout<<res;
+	cout<<"\n"<<res;
+	cout<<"\nrisultato teorico: 998"<<endl;
 	out<<res;
 }
 
@@ -144,7 +178,7 @@ int calcolaMax(vector<int> array,int k, int i)
 				else
 					{
 					primocambio  = false;
-					return max(calcolaMax(array,k,i+2)+array[i],calcolaMax(array,k,i+1));
+					return max(max (calcolaMax(array,k,i+2)+array[i],calcolaMax(array,k,i+1)),calcolaMax(array,k-1,i+1)+array[i]);
 					
 					}
 				}
@@ -162,10 +196,7 @@ int calcolaSomma(vector<int> array,int k)
 		}else if ( k == 0)
 		{ 	return 0;
 		}
-		else if(k==1)
-		{
-			return morefrequent(array);
-		}
+		else 
 		{
 			primocambio = true;
 			return calcolaMax(array,k,0);
@@ -179,21 +210,24 @@ int zainoguerrieri(int c,int i)
 	//cout<<i<<" "<<N*6<<"\n";
 	
 	if (c<0){
+		//cout<<"yeah"<<endl;
 		return -100000;
 		}
-	if (i==N*7)
-		{
+	if (i==N*12)
+		//cout<<"hahahah";
 		return 0 ;
 
 		}
 	if (matr[i][c] != -1)
 		{
+		//cout<<"fuck"<<endl;
+		//cout<<matr[i][c]<<" ";
 		return matr[i][c];
 		}
 
-	int p = i/7; 
-	int v =(i%7);
-	int diff = (7-v);
+	int p = i/12; 
+	int v =(i%12);
+	int diff = (12-v);
 	
 	matr[i][c] = max(calcolaSomma(valori[p],v)+zainoguerrieri(c-v,i+diff),zainoguerrieri(c,i+1));
 	
@@ -203,19 +237,6 @@ int zainoguerrieri(int c,int i)
 
 }
 
-int morefrequent(vector<int> array){
-	int sumpari = 0;
-	int sumdispari = 0;
-	for(int i = 0;i<array.size();i++)
-	{
-		if(i%2==0)
-		{
-			sumpari += array[i];
-		}else
-		{
-			sumdispari += array[i];
-		}
-	}
 
-	return max(sumpari,sumdispari);
-}
+
+

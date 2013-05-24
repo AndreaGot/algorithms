@@ -13,13 +13,23 @@ int calcolaMax(vector<int> array,int k,int i);
 //int zainoguerrieri(int c,int i);
 
 int calcolaSomma(vector<int> array,int k);
-int recursiva(int i, int j, int C);
-int recursiveOneColumn(int i, int C);
+
+int zaino(vector< pair<int,int> > matrice, int C,int * x);
+
+struct sort_pred {
+    bool operator()(const std::pair<int,int> &left, const std::pair<int,int> &right) {
+        return (left.first/left.second) > (right.first/right.second);
+    }
+};
+
 
 //int morefrequent(vector<int> array);
 
 int N,M,T;// N = #serate M = #sbalziumore T =#travestimenti
-int** matr;
+
+vector< pair<int,int> > matr;
+
+int* vettoreGrande;
 bool primocambio;
 
 vector<int> * valori;
@@ -39,7 +49,8 @@ int main()
 	
 	
 	store = new char[M];
-	matr = new int* [N];
+
+
 	
 	int sumTeqN = 0;
 	int k = 1;
@@ -54,7 +65,7 @@ int main()
 		
 		cout<<store[0];
 		
-		matr[i] = new int[M/2+1];
+		
 		numH = 0;
 		numJ = 0;	
 
@@ -62,6 +73,8 @@ int main()
 				numH++;
 		if(store[0]=='J')
 				numJ++;	
+
+	
 		
 		for(int j= 1; j<M;j++)
 		{
@@ -75,23 +88,26 @@ int main()
 			else
 				numJ++;
 		
-			if(j<=M/2)
-				{matr[i][j] = -1;}
-	
-		
-		
+			
 			if(store[j-1] == store[j])
 				k++;
 			else{
 				valori[i].push_back(k);
 				k = 1;	
 				s++;
-			}			
+			}	
+
+			
 			
 		}
 
-		matr[i][0] = max(numH,numJ);
-		sumTeqN += matr[i][0];
+		matr.push_back(std::make_pair(max(numH,numJ),1));
+
+	
+
+		
+
+		sumTeqN += matr[i].first;
 		
 	
 		if (k>0){
@@ -99,7 +115,7 @@ int main()
 			k = 1;
 		}
 
-		cout<< " con uno scambio : "<<matr[i][0]<<"\n";
+		cout<< " con uno scambio : "<<matr[i].first<<"\n";
 		//cout<<" e con 2: " << calcolaSomma(valori[i],2)<<"\n";
 		s = 0;
 	}
@@ -111,16 +127,24 @@ int main()
 		out<<sumTeqN;
 		cout<<sumTeqN;
 	}else 
-	{
-		if (T<N)
-		{
-		res = recursiveOneColumn(0,T);
-		}else
-		{
+	{  
 		cout<<"sto entrando \n";
-		res = recursiva(0,1,T-N);
-		cout<<" sono uscito \n";
-		}
+			for(int i = N;i<N*15;i++)
+			{
+				matr.push_back(std::make_pair(calcolaSomma(valori[i%(N)],(i/(N))+1),i/(N)+1));
+	
+			
+				cout<<"siamo serata "<<i%(N)<<" il valore è :"<<matr[i].first<<" e il peso è : "<<matr[i].second<<endl;
+			}
+		
+	  std::sort(matr.begin(),matr.end(),sort_pred());
+
+		
+	
+		int x[(N*15)-1];
+		res = zaino(matr,T,x); //+ sumTeqN
+	
+
 
 		out<<res;
 		cout<<"\n"<<res<<"\n";
@@ -166,8 +190,8 @@ int calcolaMax(vector<int> array,int k, int i)
 				else
 					{
 					primocambio  = false;
-					return max(calcolaMax(array,k,i+2)+array[i],calcolaMax(array,k,i+1));
-					
+				 
+					return max(max(calcolaMax(array,k,i+2)+array[i],calcolaMax(array,k,i+1)),calcolaMax(array,k-1,i+1)+array[i]);
 					}
 				}
 		}			
@@ -193,55 +217,42 @@ int calcolaSomma(vector<int> array,int k)
 }
 
 
-int recursiva(int i, int j, int C)
+int zaino(vector< pair<int,int> > matrice, int C,int * x)
 {
+int w = C;
+int i = 0;
+int sum = 0;
+for (int i = 0; i< matrice.size();i++)
+	{
+	x[i] = 0;
 
-	int sum = 0;
+	}
 
-	if(C<0){
 
-		cout<<"minore di c";
-		return -100000;
+	while(i<matrice.size() and w>0)
+	{
+
+	x[i] = min(w,matrice[i].second);
+	w = w - x[i];
+	
+	sum += matrice[i].first;
 		
-		}
-	if(j>=M/2)
+	if(min(w,matrice[i].second) != w)
 		{
-		
-		cout<<"maggiore di M/2";
-		return -100000;
-
+		int diff = (N-(i));
+		i+N;
 		}
-	if(i>=N){
-		
-		cout<<"maggiore di N";
-		return -100000;
-		}
-	if(matr[i][j]==-1)
-		{
-		
-		
-			matr[i][j] = calcolaSomma(valori[i],j+1);
-	
-	
-		}
+	else
+	i++;
+	}
 
-
-cout<<"Matrice ["<<i<<"]["<<j<<"]"<<" = "<<matr[i][j]<<"\n";
-	
-	
-	return  max( max( matr[i][j] + recursiva(i,j+1,C-1) , matr[i][j] + recursiva(i-1,j,C-j) ),recursiva(i+1,j,C)) ;
-	
-
+	return sum;
 }
 
 
-int recursiveOneColumn(int i, int C){
-	if(C<0)
-		return -100000;
-	if(i>=N)
-		return -1;
-
-	return max(matr[i][0] + recursiveOneColumn(i+1,C-1),recursiveOneColumn(i+1,C));
 
 
-}
+
+
+
+
